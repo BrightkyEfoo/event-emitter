@@ -1,0 +1,19 @@
+{
+  "name": "brightkyefoo-event-emitter",
+  "version": "1.0.0",
+  "description": "This is my own small implementation of event emitters using js and proxies",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "brightkyefoo",
+    "node.js",
+    "eventemitter",
+    "custom-implementation",
+    "home-made"
+  ],
+  "author": "BrightkyEfoo",
+  "license": "ISC"
+}
