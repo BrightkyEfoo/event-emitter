@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 class BrightkyEmitter {
     constructor() {
         this._state = {};
@@ -25,4 +23,4 @@ class BrightkyEmitter {
         this._stateProxy[eventName] = data;
     }
 }
-exports.default = BrightkyEmitter;
+export default BrightkyEmitter;
