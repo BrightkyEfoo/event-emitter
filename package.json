@@ -4,6 +4,7 @@
   "description": "This is my own small implementation of event emitters using js and proxies",
   "main": "index.js",
   "type": "module",
+  "homepage": "https://github.com/BrightkyEfoo/event-emitter.git",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
