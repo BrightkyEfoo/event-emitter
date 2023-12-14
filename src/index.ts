@@ -1,6 +1,10 @@
+import { UUID, randomUUID } from "crypto";
+
 type callbackObj = {
-  callback: Function;
+  callback: Function | undefined;
   once: boolean;
+  id: UUID;
+  executed?: boolean;
 };
 
 class BrightkyEmitter {
@@ -12,30 +16,33 @@ class BrightkyEmitter {
     [p: string | symbol]: callbackObj[] | undefined;
   } = {};
 
-  private _onceCallbacks: {
-    [p: string | symbol]: callbackObj[] | undefined;
-  } = {};
-
   private _stateProxy = new Proxy(this._state, {
     set: (target, property, newValue, receiver) => {
       target[property] = newValue;
-      this._callbacks[property]?.forEach((el) => {
-        el.callback(newValue)
+      this._callbacks[property]?.forEach((el, idx) => {
+        if (el.callback) {
+          if (!el.once) el.callback(newValue);
+          else if (!el.executed) {
+            this._callbacks[property]![idx].executed = true;
+            el.callback(newValue);
+          }
+        }
       });
-      let canRemove = false
-      this._onceCallbacks[property]?.forEach(el => {
-        el.callback(newValue)
-      })
-      if(canRemove) this._onceCallbacks[property] = undefined
       return true;
     },
   });
 
-  on(eventName: string, callback: Function) {
+  on(eventName: string, callback: Function | undefined) {
     if (Array.isArray(this._callbacks[eventName])) {
-      this._callbacks[eventName]!.push({ callback, once: false });
+      this._callbacks[eventName]!.push({
+        callback,
+        once: false,
+        id: randomUUID(),
+      });
     } else {
-      this._callbacks[eventName] = [{ callback, once: false }];
+      this._callbacks[eventName] = [
+        { callback, once: false, id: randomUUID() },
+      ];
     }
   }
 
@@ -43,11 +50,15 @@ class BrightkyEmitter {
     this._stateProxy[eventName] = data;
   }
 
-  once(eventName: string, callback: Function) {
-    if (Array.isArray(this._onceCallbacks[eventName])) {
-      this._onceCallbacks[eventName]!.push({ callback, once: true });
+  once(eventName: string, callback: Function | undefined) {
+    if (Array.isArray(this._callbacks[eventName])) {
+      this._callbacks[eventName]!.push({
+        callback,
+        once: true,
+        id: randomUUID(),
+      });
     } else {
-      this._onceCallbacks[eventName] = [{ callback, once: true }];
+      this._callbacks[eventName] = [{ callback, once: true, id: randomUUID() }];
     }
   }
 }

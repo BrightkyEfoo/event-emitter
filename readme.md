@@ -15,3 +15,6 @@ emitter.on("yo", () => {
 emitter.emit("yo", undefined);
 
 ```
+
+# API
+ the once method is still in process. 
